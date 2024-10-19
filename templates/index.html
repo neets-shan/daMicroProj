@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CVH Assessment</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #eef2f3;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 80%;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .results {
+            margin-top: 30px;
+            text-align: center;
+        }
+        img {
+            margin-top: 20px;
+            width: 100%;
+            border-radius: 5px;
+        }
+        .alert {
+            padding: 15px;
+            color: white;
+            border-radius: 5px;
+        }
+        .alert-poor {
+            background-color: #dc3545;
+        }
+        .alert-intermediate {
+            background-color: #ffc107;
+            color: #333;
+        }
+        .alert-ideal {
+            background-color: #28a745;
+        }
+        .highlighted-suggestions {
+            margin-top: 20px;
+            padding: 15px;
+            border-left: 4px solid;
+            background-color: #f8f9fa;
+        }
+        .highlighted-suggestions.alert-ideal {
+            border-color: #28a745;
+        }
+        .highlighted-suggestions.alert-intermediate {
+            border-color: #ffc107;
+        }
+        .highlighted-suggestions.alert-poor {
+            border-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cardiovascular Health Assessment</h1>
+        <form method="POST">
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="text" name="age" required>
+            </div>
+            <div class="form-group">
+                <label for="bmi">BMI</label>
+                <input type="text" name="bmi" required>
+            </div>
+            <div class="form-group">
+                <label for="smoking">Smoking</label>
+                <select name="smoking">
+                    <option value="0">Non-smoker</option>
+                    <option value="1">Smoker</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="physical_activity">Physical Activity</label>
+                <select name="physical_activity">
+                    <option value="2">Regular</option>
+                    <option value="1">Somewhat Active</option>
+                    <option value="0">Inactive</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="blood_pressure">Blood Pressure</label>
+                <select name="blood_pressure">
+                    <option value="0">Normal</option>
+                    <option value="1">Prehypertension</option>
+                    <option value="2">Hypertension</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="cholesterol">Cholesterol</label>
+                <select name="cholesterol">
+                    <option value="0">Normal</option>
+                    <option value="1">Borderline</option>
+                    <option value="2">High</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="glucose">Fasting Blood Sugar</label>
+                <select name="glucose">
+                    <option value="0">Normal</option>
+                    <option value="1">Prediabetic</option>
+                    <option value="2">Diabetic</option>
+                </select>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+        
+        {% if result %}
+            <div class="results">
+                <h2>Results: 
+                    <span class="alert alert-{{ 'poor' if result == 'Poor' else ('intermediate' if result == 'Intermediate' else 'ideal') }}">
+                        {{ result }}
+                    </span>
+                </h2>
+                
+                {% if bar_graph_cvh %}
+                    <h3>Your BMI vs Ideal BMI</h3>
+                    <img src="data:image/png;base64,{{ bar_graph_cvh }}">
+                {% endif %}
+                
+                {% if box_graph_healthcare %}
+                    <h3>Healthcare Costs by CVH Category</h3>
+                    <img src="data:image/png;base64,{{ box_graph_healthcare }}">
+                {% endif %}
+                
+                {% if linear_healthcare_cost_plot %}
+                    <h3>Average Healthcare Costs</h3>
+                    <img src="data:image/png;base64,{{ linear_healthcare_cost_plot }}">
+                {% endif %}
+                
+                {% if correlation %}
+                    <h3>Correlation between CVH and Healthcare Costs</h3>
+                    <p>Correlation Coefficient: {{ correlation }}</p>
+                    {% if correlation_graph %}
+                        <img src="data:image/png;base64,{{ correlation_graph }}">
+                    {% endif %}
+                {% endif %}
+                
+                {% if suggestions or diet_plan %}
+                    <div class="highlighted-suggestions alert-{{ 'poor' if result == 'Poor' else ('intermediate' if result == 'Intermediate' else 'ideal') }}">
+                        <h4>Suggestions</h4>
+                        {% if suggestions %}
+                            <p>{{ suggestions }}</p>
+                        {% endif %}
+                        {% if diet_plan %}
+                            <p>{{ diet_plan }}</p>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
