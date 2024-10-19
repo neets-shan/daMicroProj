@@ -94,6 +94,9 @@ def index():
         elif cvh_numeric == 2:  # Poor
             suggestions = "To improve your CVH, quit smoking, adopt a healthy diet, exercise regularly, and monitor your health."
             diet_plan = "Diet Plan: Focus on low-sugar, low-fat foods; whole grains, fruits, vegetables, and lean proteins."
+        elif cvh_numeric == 0:
+            suggestions = "You are doing great, Keep going!!"
+            diet_plan = "Follow the current pattern and eat healthy."    
 
     # Generate graphs only if user_bmi is defined
     img_bar_cvh = generate_bmi_comparison_plot(user_bmi) if user_bmi is not None else None
@@ -108,14 +111,15 @@ def index():
                            linear_healthcare_cost_plot=img_linear_healthcare_cost,
                            correlation=correlation,
                            correlation_graph=img_correlation,
-                           suggestions=suggestions)
+                           suggestions=suggestions,
+                           diet_plan=diet_plan)
 
 # Function to generate BMI comparison plot
 def generate_bmi_comparison_plot(user_bmi):
     plt.figure(figsize=(8, 5))
     sns.histplot(data=df, x='bmi', kde=True)
     plt.axvline(user_bmi, color='red', linestyle='--', label='Your BMI')
-    plt.axvline(22, color='green', linestyle='-', label='Ideal BMI')  # Ideal BMI reference
+    plt.axvline(25, color='green', linestyle='-', label='Ideal BMI')  # Ideal BMI reference
     plt.title('BMI Comparison')
     plt.xlabel('BMI')
     plt.ylabel('Frequency')
